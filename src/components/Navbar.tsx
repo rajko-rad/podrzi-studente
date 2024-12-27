@@ -1,15 +1,18 @@
 import React from 'react';
 import { Menu, X } from 'lucide-react';
+import LanguageSelector from './LanguageSelector';
+import { useLanguage } from '../i18n/LanguageContext';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = React.useState(false);
+  const { t } = useLanguage();
 
   const menuItems = [
-    { title: 'Početna', href: '/' },
-    { title: 'O Protestima', href: '/o-protestima' },
-    { title: 'Aktuelna Dešavanja', href: '/desavanja' },
-    { title: 'Naša Pomoć', href: '/pomoc' },
-    { title: 'Zvanična Dokumentacija', href: '/dokumentacija' },
+    { title: t('nav.home'), href: '/' },
+    { title: t('nav.about'), href: '/o-protestima' },
+    { title: t('nav.events'), href: '/desavanja' },
+    { title: t('nav.help'), href: '/pomoc' },
+    { title: t('nav.docs'), href: '/dokumentacija' },
   ];
 
   return (
@@ -18,7 +21,7 @@ const Navbar = () => {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <a href="/" className="text-xl font-bold text-gray-800">
-              Podrška Protestima
+              {t('nav.title')}
             </a>
           </div>
 
@@ -33,10 +36,12 @@ const Navbar = () => {
                 {item.title}
               </a>
             ))}
+            <LanguageSelector />
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center">
+          <div className="md:hidden flex items-center space-x-4">
+            <LanguageSelector />
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="text-gray-600 hover:text-gray-900"
