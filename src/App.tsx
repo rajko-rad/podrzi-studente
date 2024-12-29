@@ -2,6 +2,7 @@ import React from 'react';
 import Navbar from './components/Navbar';
 import WorkInProgress from './components/WorkInProgress';
 import { useLanguage } from './i18n/LanguageContext';
+import Events from './components/Events';
 
 function App() {
   const path = window.location.pathname;
@@ -11,7 +12,9 @@ function App() {
     <div className="min-h-screen bg-gray-50">
       <Navbar />
       
-      {path === '/' ? (
+      {path === '/desavanja' ? (
+        <Events />
+      ) : path === '/' ? (
         <main className="max-w-4xl mx-auto px-4 py-12">
           <h1 className="text-4xl font-bold text-gray-900 mb-8 text-center">
             {t('landing.title')}
