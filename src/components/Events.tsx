@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useLanguage } from '../i18n/LanguageContext';
 import InstagramFilters from './InstagramFilters';
+import Papa from 'papaparse';
 
 interface InstagramAccount {
   username: string;
