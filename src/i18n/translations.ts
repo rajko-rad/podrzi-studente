@@ -14,7 +14,7 @@ export const translations = {
       }
     },
     nav: {
-      title: "Podrška Protestima",
+      title: "Podrška Studentima",
       home: "Početna",
       about: "O Protestima",
       events: "Aktuelna Dešavanja",
