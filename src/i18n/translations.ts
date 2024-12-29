@@ -44,7 +44,7 @@ export const translations = {
       }
     },
     nav: {
-      title: "Support Protests",
+      title: "Support Students",
       home: "Home",
       about: "About the Protests",
       events: "Current Events",
