@@ -9,29 +9,34 @@ interface FilterOption {
   count: number;
 }
 
+type FilterType = 'vrstaNaloga' | 'vrstaUstanove' | 'grad' | 'imeInstitucije';
+
 interface FiltersProps {
   options: {
     vrstaNaloga: FilterOption[];
     vrstaUstanove: FilterOption[];
     grad: FilterOption[];
+    imeInstitucije: FilterOption[];
   };
   selectedFilters: {
     vrstaNaloga: string[];
     vrstaUstanove: string[];
     grad: string[];
+    imeInstitucije: string[];
   };
-  onFilterChange: (filterType: string, values: string[]) => void;
+  onFilterChange: (filterType: FilterType, value: string[]) => void;
 }
 
 const InstagramFilters: FC<FiltersProps> = ({ options, selectedFilters, onFilterChange }) => {
-  const [searchTerms, setSearchTerms] = useState({
+  const [searchTerms, setSearchTerms] = useState<Record<FilterType, string>>({
     vrstaNaloga: '',
     vrstaUstanove: '',
-    grad: ''
+    grad: '',
+    imeInstitucije: ''
   });
 
   const renderFilter = (
-    filterType: 'vrstaNaloga' | 'vrstaUstanove' | 'grad',
+    filterType: FilterType,
     label: string,
     options: FilterOption[]
   ) => {
@@ -40,7 +45,7 @@ const InstagramFilters: FC<FiltersProps> = ({ options, selectedFilters, onFilter
     );
 
     return (
-      <div className="w-48">
+      <div className="w-full sm:w-48">
         <span className="block text-xs text-gray-500 mb-1 font-medium">{label}</span>
         <Select.Root
           value={selectedFilters[filterType][0] || 'all'}
@@ -57,11 +62,15 @@ const InstagramFilters: FC<FiltersProps> = ({ options, selectedFilters, onFilter
 
           <Select.Portal>
             <Select.Content 
-              className="overflow-hidden bg-white rounded-md shadow-lg border border-gray-200 min-w-[200px]"
+              className="overflow-hidden bg-white rounded-md shadow-lg border border-gray-200 min-w-[200px] max-h-[300px]"
               position="popper"
               sideOffset={5}
             >
-              {filterType === 'grad' && (
+              <Select.ScrollUpButton className="flex items-center justify-center h-6 bg-white text-gray-700 cursor-default">
+                <ChevronDown className="w-4 h-4 rotate-180" />
+              </Select.ScrollUpButton>
+              
+              {(filterType === 'grad' || filterType === 'imeInstitucije') && (
                 <div className="flex items-center px-3 py-2 border-b border-gray-100">
                   <Search className="w-4 h-4 text-gray-400 mr-2" />
                   <input
@@ -77,7 +86,7 @@ const InstagramFilters: FC<FiltersProps> = ({ options, selectedFilters, onFilter
                 </div>
               )}
 
-              <Select.Viewport className="p-1">
+              <Select.Viewport className="p-1 overflow-auto max-h-[200px]">
                 <Select.Item
                   value="all"
                   className="relative flex items-center px-8 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer rounded-sm"
@@ -105,6 +114,10 @@ const InstagramFilters: FC<FiltersProps> = ({ options, selectedFilters, onFilter
                   </div>
                 )}
               </Select.Viewport>
+
+              <Select.ScrollDownButton className="flex items-center justify-center h-6 bg-white text-gray-700 cursor-default">
+                <ChevronDown className="w-4 h-4" />
+              </Select.ScrollDownButton>
             </Select.Content>
           </Select.Portal>
         </Select.Root>
@@ -113,10 +126,11 @@ const InstagramFilters: FC<FiltersProps> = ({ options, selectedFilters, onFilter
   };
 
   return (
-    <div className="flex flex-col md:flex-row justify-center gap-4 p-4 mb-8">
+    <div className="grid grid-cols-2 sm:flex sm:flex-row justify-center gap-2 sm:gap-4 p-4 mb-8">
       {renderFilter('vrstaNaloga', 'Vrsta Naloga', options.vrstaNaloga)}
       {renderFilter('vrstaUstanove', 'Vrsta Ustanove', options.vrstaUstanove)}
       {renderFilter('grad', 'Grad', options.grad)}
+      {renderFilter('imeInstitucije', 'Ime Institucije', options.imeInstitucije)}
     </div>
   );
 };

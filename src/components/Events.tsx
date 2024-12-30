@@ -8,6 +8,8 @@ interface InstagramAccount {
   vrstaNaloga: string;
   vrstaUstanove: string;
   grad: string;
+  imeInstitucije: string;
+  orderNumber: number;
 }
 
 const Events = () => {
@@ -16,11 +18,12 @@ const Events = () => {
   const [selectedFilters, setSelectedFilters] = useState({
     vrstaNaloga: [],
     vrstaUstanove: [],
-    grad: []
+    grad: [],
+    imeInstitucije: []
   });
 
   useEffect(() => {
-    fetch('/Spiskovi univerziteta i informisanje - master_tabela.csv')
+    fetch('/Spiskovi univerziteta i informisanje - master_tabela (1).csv')
       .then(response => response.text())
       .then(csv => {
         Papa.parse(csv, {
@@ -31,7 +34,9 @@ const Events = () => {
                 username: row.Username?.trim(),
                 vrstaNaloga: row.vrsta_naloga?.trim(),
                 vrstaUstanove: row.vrsta_institucije?.trim(),
-                grad: row.grad?.trim()
+                grad: row.Grad?.trim(),
+                imeInstitucije: row['Ime Institucije']?.trim(),
+                orderNumber: parseInt(row.red) || Infinity
               }))
               .filter(account => account.username);
             setAccounts(parsedAccounts);
@@ -65,20 +70,43 @@ const Events = () => {
       grad: Object.entries(countByField('grad'))
         .map(([value, count]) => ({ value, label: value, count }))
         .filter(option => option.value)
+        .sort((a, b) => b.count - a.count),
+      imeInstitucije: Object.entries(countByField('imeInstitucije'))
+        .map(([value, count]) => ({ value, label: value, count }))
+        .filter(option => option.value)
+        .sort((a, b) => a.label.localeCompare(b.label))
     };
   }, [accounts]);
 
   const filteredAccounts = useMemo(() => {
-    return accounts.filter(account => {
+    const filtered = accounts.filter(account => {
       const matchesVrstaNaloga = selectedFilters.vrstaNaloga.length === 0 || 
         selectedFilters.vrstaNaloga.includes(account.vrstaNaloga);
       const matchesVrstaUstanove = selectedFilters.vrstaUstanove.length === 0 || 
         selectedFilters.vrstaUstanove.includes(account.vrstaUstanove);
       const matchesGrad = selectedFilters.grad.length === 0 || 
         selectedFilters.grad.includes(account.grad);
+      const matchesImeInstitucije = selectedFilters.imeInstitucije.length === 0 || 
+        selectedFilters.imeInstitucije.includes(account.imeInstitucije);
 
-      return matchesVrstaNaloga && matchesVrstaUstanove && matchesGrad;
+      return matchesVrstaNaloga && matchesVrstaUstanove && matchesGrad && matchesImeInstitucije;
     });
+
+    // Sort accounts: ordered ones first, then random
+    const orderedAccounts = [...filtered].sort((a, b) => {
+      // If both have order numbers (not Infinity)
+      if (isFinite(a.orderNumber) && isFinite(b.orderNumber)) {
+        return a.orderNumber - b.orderNumber;
+      }
+      // If only a has order number
+      if (isFinite(a.orderNumber)) return -1;
+      // If only b has order number
+      if (isFinite(b.orderNumber)) return 1;
+      // If neither has order number, randomize
+      return Math.random() - 0.5;
+    });
+
+    return orderedAccounts;
   }, [accounts, selectedFilters]);
 
   const handleFilterChange = (filterType: string, values: string[]) => {
