@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useRef, useCallback } from 'react';
 import { useLanguage } from '../i18n/LanguageContext';
 import InstagramFilters from './InstagramFilters';
 import Papa from 'papaparse';
@@ -12,9 +12,16 @@ interface InstagramAccount {
   orderNumber: number;
 }
 
+const INITIAL_LOAD_COUNT = 6;
+const LOAD_MORE_COUNT = 6;
+
 const Events = () => {
   const { t } = useLanguage();
   const [accounts, setAccounts] = useState<InstagramAccount[]>([]);
+  const [visibleCount, setVisibleCount] = useState(INITIAL_LOAD_COUNT);
+  const [loadedEmbeds, setLoadedEmbeds] = useState<Set<string>>(new Set());
+  const observerRef = useRef<IntersectionObserver | null>(null);
+  const loadMoreTriggerRef = useRef<HTMLDivElement>(null);
   const [selectedFilters, setSelectedFilters] = useState({
     vrstaNaloga: [],
     vrstaUstanove: [],
@@ -22,6 +29,19 @@ const Events = () => {
     imeInstitucije: []
   });
 
+  // Load Instagram embed script once on component mount
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = 'https://www.instagram.com/embed.js';
+    script.async = true;
+    document.body.appendChild(script);
+
+    return () => {
+      script.remove();
+    };
+  }, []); // Empty dependency array means this runs once on mount
+
+  // Fetch accounts data
   useEffect(() => {
     fetch('/Spiskovi univerziteta i informisanje - master_tabela (1).csv')
       .then(response => response.text())
@@ -109,40 +129,70 @@ const Events = () => {
     return orderedAccounts;
   }, [accounts, selectedFilters]);
 
+  const visibleAccounts = useMemo(() => {
+    return filteredAccounts.slice(0, visibleCount);
+  }, [filteredAccounts, visibleCount]);
+
+  const loadEmbed = useCallback((username: string) => {
+    if (loadedEmbeds.has(username)) return;
+    
+    // @ts-ignore
+    if (window.instgrm) {
+      // @ts-ignore
+      window.instgrm.Embeds.process();
+      setLoadedEmbeds(prev => new Set([...prev, username]));
+    }
+  }, [loadedEmbeds]);
+
+  // Setup Intersection Observer
+  useEffect(() => {
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const username = entry.target.getAttribute('data-username');
+            if (username) {
+              loadEmbed(username);
+            }
+          }
+        });
+      },
+      { rootMargin: '100px' }
+    );
+
+    return () => observerRef.current?.disconnect();
+  }, [loadEmbed]);
+
+  // Setup infinite scroll
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && visibleCount < filteredAccounts.length) {
+          setVisibleCount(prev => prev + LOAD_MORE_COUNT);
+        }
+      },
+      { rootMargin: '200px' }
+    );
+
+    if (loadMoreTriggerRef.current) {
+      observer.observe(loadMoreTriggerRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [filteredAccounts.length, visibleCount]);
+
+  // Priority loading for first visible items
+  useEffect(() => {
+    const priorityAccounts = visibleAccounts.slice(0, INITIAL_LOAD_COUNT);
+    priorityAccounts.forEach(account => loadEmbed(account.username));
+  }, [visibleAccounts, loadEmbed]);
+
   const handleFilterChange = (filterType: string, values: string[]) => {
     setSelectedFilters(prev => ({
       ...prev,
       [filterType]: values
     }));
   };
-
-  useEffect(() => {
-    // Remove any existing embed.js scripts
-    const existingScripts = document.querySelectorAll('script[src*="instagram.com/embed.js"]');
-    existingScripts.forEach(script => script.remove());
-
-    // Add fresh embed.js script
-    const script = document.createElement('script');
-    script.src = 'https://www.instagram.com/embed.js';
-    script.async = true;
-
-    script.onload = () => {
-      // @ts-ignore
-      if (window.instgrm) {
-        // @ts-ignore
-        window.instgrm.Embeds.process();
-      }
-    };
-
-    document.body.appendChild(script);
-
-    return () => {
-      const scripts = document.querySelectorAll('script[src*="instagram.com/embed.js"]');
-      scripts.forEach(script => script.remove());
-    };
-  }, [filteredAccounts]); // Re-run when filtered accounts change
-
-  console.log('Filtered accounts:', filteredAccounts);
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
@@ -155,10 +205,14 @@ const Events = () => {
       />
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredAccounts.map((account) => (
+        {visibleAccounts.map((account) => (
           <div 
             key={account.username}
             className="transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+            ref={el => {
+              if (el) observerRef.current?.observe(el);
+            }}
+            data-username={account.username}
           >
             <blockquote
               className="instagram-media"
@@ -190,13 +244,15 @@ const Events = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Loading...
+                  {!loadedEmbeds.has(account.username) ? 'Loading...' : ''}
                 </a>
               </div>
             </blockquote>
           </div>
         ))}
       </div>
+      
+      <div ref={loadMoreTriggerRef} className="h-10" />
     </div>
   );
 };
