@@ -3,6 +3,7 @@ import Navbar from './components/Navbar';
 import WorkInProgress from './components/WorkInProgress';
 import { useLanguage } from './i18n/LanguageContext';
 import Events from './components/Events';
+import HowToHelp from './components/HowToHelp';
 
 function App() {
   const path = window.location.pathname;
@@ -16,6 +17,8 @@ function App() {
         <Events />
       ) : path === '/zahtevi' ? (
         <WorkInProgress />
+      ) : path === '/kako-pomoci' ? (
+        <HowToHelp />
       ) : path === '/' ? (
         <main className="max-w-4xl mx-auto px-4 py-12">
           <h1 className="text-4xl font-bold text-gray-900 mb-8 text-center">
