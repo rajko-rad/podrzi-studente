@@ -53,6 +53,45 @@ const Demands = () => {
     <div className="min-h-screen bg-gray-50">
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 py-8">
+        {/* Detailed Explanations Section */}
+        <div className="mb-24">
+          <div className="flex items-center gap-2 mb-6">
+            <h2 className="text-2xl font-bold">Konkretizacija Zahteva</h2>
+            <span className="text-sm text-gray-500">27. Dec 2024</span>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {['DECYPNRAJv6', 'DEFfXm5AVAh', 'DEHvVVyg2gP'].map((postId) => (
+              <div key={postId} className="instagram-embed-container">
+                <blockquote 
+                  className="instagram-media" 
+                  data-instgrm-captioned 
+                  data-instgrm-permalink={`https://www.instagram.com/p/${postId}/?utm_source=ig_embed&amp;utm_campaign=loading`}
+                  data-instgrm-version="14"
+                  style={{ 
+                    background: '#FFF',
+                    border: '0',
+                    borderRadius: '3px',
+                    boxShadow: '0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15)',
+                    margin: '1px',
+                    maxWidth: '540px',
+                    minWidth: '326px',
+                    padding: '0',
+                    width: '99.375%'
+                  }}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Original Demands Section Header */}
+        <div className="mb-8">
+          <div className="flex items-center gap-2 mb-6">
+            <h2 className="text-2xl font-bold">Originalni Zahtevi</h2>
+            <span className="text-sm text-gray-500">1. Dec 2024</span>
+          </div>
+        </div>
+
         {/* Source Attribution */}
         <div className="mb-8 text-center">
           <a 
@@ -110,37 +149,6 @@ const Demands = () => {
               </div>
             </div>
           ))}
-        </div>
-
-        {/* Detailed Explanations Section */}
-        <div className="mb-12">
-          <div className="flex items-center gap-2 mb-6">
-            <MessageCircle className="w-6 h-6 text-red-600" />
-            <h2 className="text-2xl font-bold">Detaljnija Objašnjenja</h2>
-          </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {['DECYPNRAJv6', 'DEFfXm5AVAh', 'DEHvVVyg2gP'].map((postId) => (
-              <div key={postId} className="instagram-embed-container">
-                <blockquote 
-                  className="instagram-media" 
-                  data-instgrm-captioned 
-                  data-instgrm-permalink={`https://www.instagram.com/p/${postId}/?utm_source=ig_embed&amp;utm_campaign=loading`}
-                  data-instgrm-version="14"
-                  style={{ 
-                    background: '#FFF',
-                    border: '0',
-                    borderRadius: '3px',
-                    boxShadow: '0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15)',
-                    margin: '1px',
-                    maxWidth: '540px',
-                    minWidth: '326px',
-                    padding: '0',
-                    width: '99.375%'
-                  }}
-                />
-              </div>
-            ))}
-          </div>
         </div>
       </div>
     </div>
