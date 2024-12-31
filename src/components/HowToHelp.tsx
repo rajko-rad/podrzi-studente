@@ -1,6 +1,16 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import Papa from 'papaparse';
 import { ExternalLink, Clock, Gift, Wallet, AlertCircle, UserPlus, HelpingHand, Truck } from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageContext';
+import { UniversityTable } from './UniversityTable';
+
+interface University {
+  grad: string;
+  ime_institucije: string;
+  link_za_uputstva: string;
+  email: string;
+  instagram: string;
+}
 
 interface Link {
   text: string;
@@ -22,7 +32,37 @@ interface SupportCardProps {
 }
 
 const HowToHelp = () => {
+  const [universities, setUniversities] = useState<University[]>([]);
   const { t } = useLanguage();
+
+  useEffect(() => {
+    fetch('/Spiskovi univerziteta i informisanje - master_tabela (1).csv')
+      .then(response => response.text())
+      .then(csv => {
+        Papa.parse(csv, {
+          header: true,
+          complete: (results) => {
+            const parsedUniversities = results.data
+              .map(row => ({
+                grad: row.Grad?.trim() || '',
+                ime_institucije: row['Ime Institucije']?.trim() || '',
+                link_za_uputstva: row['Link za Uputstva za Donacije']?.trim() || '',
+                email: row.email?.trim() || '',
+                instagram: row.nalog?.trim() || ''
+              }))
+              .filter(uni => 
+                uni.ime_institucije && 
+                uni.link_za_uputstva
+              )
+              .sort((a, b) => a.ime_institucije.localeCompare(b.ime_institucije));
+            setUniversities(parsedUniversities);
+          }
+        });
+      })
+      .catch(error => {
+        console.error('Error loading CSV:', error);
+      });
+  }, []);
 
   const categories = [
     {
@@ -191,9 +231,7 @@ const HowToHelp = () => {
             Aktuelne potrebe po lokacijama
           </h2>
         </div>
-        <div className="bg-gray-100 p-4 rounded-lg text-center">
-          [TABLE PLACEHOLDER]
-        </div>
+        <UniversityTable data={universities} />
       </div>
     </div>
   );

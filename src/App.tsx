@@ -4,6 +4,7 @@ import WorkInProgress from './components/WorkInProgress';
 import { useLanguage } from './i18n/LanguageContext';
 import Events from './components/Events';
 import HowToHelp from './components/HowToHelp';
+import Demands from './components/Demands';
 
 function App() {
   const path = window.location.pathname;
@@ -16,7 +17,7 @@ function App() {
       {path === '/pratite' ? (
         <Events />
       ) : path === '/zahtevi' ? (
-        <WorkInProgress />
+        <Demands />
       ) : path === '/kako-pomoci' ? (
         <HowToHelp />
       ) : path === '/' ? (

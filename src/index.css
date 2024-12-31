@@ -1,3 +1,25 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.instagram-embed-container {
+  position: relative;
+  width: 100%;
+  min-height: 500px;
+  background: #fafafa;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.instagram-embed-container .instagram-media {
+  margin: 0 !important;
+  min-width: 100% !important;
+  width: 100% !important;
+  min-height: 500px;
+}
+
+@media (max-width: 640px) {
+  .instagram-embed-container {
+    min-height: 460px;
+  }
+}
