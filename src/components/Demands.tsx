@@ -88,7 +88,7 @@ const Demands = () => {
               id={`zahtev-${demand.id}`}
               className={`flex flex-col ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-12 items-center`}
             >
-              <div className="lg:w-1/2">
+              <div className="lg:w-1/2 order-2 lg:order-none">
                 <div className="bg-white rounded-lg shadow-md p-8 hover:shadow-lg transition-shadow">
                   <div className="flex items-center gap-4 mb-6">
                     <div className="bg-red-100 p-2 rounded-full">
@@ -101,7 +101,7 @@ const Demands = () => {
                   </p>
                 </div>
               </div>
-              <div className="lg:w-1/2 flex items-center justify-center">
+              <div className="lg:w-1/2 flex items-center justify-center order-1 lg:order-none">
                 <img
                   src={demand.imagePath}
                   alt={`Zahtev ${demand.id}`}
