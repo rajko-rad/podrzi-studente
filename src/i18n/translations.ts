@@ -13,13 +13,16 @@ export const translations = {
         crypto: "Donacija kriptovalutama"
       }
     },
+    events: {
+        summary: "Našli smo naloge preko {higher} viših i {secondary} srednjih obrazovnih ustanova trenutno u blokadi, zapratite studente direktno!"
+      },
     nav: {
       title: "Podrška Studentima",
       home: "Početna",
-      about: "O Protestima",
-      events: "Aktuelna Dešavanja",
-      help: "Naša Pomoć",
-      docs: "Zvanična Dokumentacija"
+      help: "Kako Pomoći",
+      about: "Aktuelno",
+      demands: "Zahtevi",
+      events: "Pratite Studente"
     },
     footer: {
       copyright: "© 2024 Podrška Studentskim Protestima. Sva prava zadržana."
@@ -43,13 +46,16 @@ export const translations = {
         crypto: "Donate via Cryptocurrency"
       }
     },
+    events: {
+        summary: "We found accounts across {higher} higher and {secondary} secondary educational institutions currently under blockade, follow the students directly!"
+      },
     nav: {
-      title: "Support Students",
+      title: "Support the Students",
       home: "Home",
-      about: "About the Protests",
-      events: "Current Events",
-      help: "Our Assistance",
-      docs: "Official Documentation"
+      help: "How to Help",
+      about: "Updates",
+      demands: "Demands",
+      events: "Follow Students"
     },
     footer: {
       copyright: "© 2024 Support for Student Protests. All rights reserved."
@@ -73,13 +79,16 @@ export const translations = {
         crypto: "Spende mit Kryptowährungen"
       }
     },
+    events: {
+        summary: "Wir haben Konten von {higher} hochschulen und {secondary} weiterführenden bildungseinrichtungen gefunden, die derzeit blockiert sind, folgen Sie den Studenten direkt!"
+      },
     nav: {
-      title: "Protestunterstützung",
+      title: "Unterstützung für Studenten",
       home: "Startseite",
-      about: "Über die Proteste",
-      events: "Aktuelle Ereignisse",
-      help: "Unsere Hilfe",
-      docs: "Offizielle Dokumentation"
+      help: "Wie man hilft",
+      about: "Aktuelles",
+      demands: "Forderungen",
+      events: "Studenten folgen"
     },
     footer: {
       copyright: "© 2024 Unterstützung für Studentenproteste. Alle Rechte vorbehalten."

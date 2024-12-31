@@ -9,10 +9,10 @@ const Navbar = () => {
 
   const menuItems = [
     { title: t('nav.home'), href: '/' },
-    { title: t('nav.about'), href: '/o-protestima' },
-    { title: t('nav.events'), href: '/desavanja' },
-    { title: t('nav.help'), href: '/pomoc' },
-    { title: t('nav.docs'), href: '/dokumentacija' },
+    { title: t('nav.help'), href: '/kako-pomoci' },
+    { title: t('nav.about'), href: '/aktuelno' },
+    { title: t('nav.demands'), href: '/zahtevi' },
+    { title: t('nav.events'), href: '/pratite' }
   ];
 
   return (

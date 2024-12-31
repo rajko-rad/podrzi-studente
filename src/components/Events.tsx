@@ -194,17 +194,36 @@ const Events = () => {
     }));
   };
 
+  const institutionCounts = useMemo(() => {
+    const higher = accounts.filter(a => 
+      a.vrstaUstanove?.toLowerCase().includes('viš') || 
+      a.vrstaUstanove?.toLowerCase().includes('fakultet')
+    ).length;
+    
+    const secondary = accounts.filter(a => 
+      a.vrstaUstanove?.toLowerCase().includes('srednj')
+    ).length;
+
+    return { higher, secondary };
+  }, [accounts]);
+
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-center mb-8">{t('nav.events')}</h1>
+    <div className="max-w-7xl mx-auto px-4 py-2">
+      <h1 className="text-3xl font-bold text-center mb-2">{t('nav.events')}</h1>
       
+      <p className="text-center text-sm text-gray-600 mb-2">
+        {t('events.summary')
+          .replace('{higher}', institutionCounts.higher.toString())
+          .replace('{secondary}', institutionCounts.secondary.toString())}
+      </p>
+
       <InstagramFilters
         options={filterOptions}
         selectedFilters={selectedFilters}
         onFilterChange={handleFilterChange}
       />
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
         {visibleAccounts.map((account) => (
           <div 
             key={account.username}
@@ -252,7 +271,7 @@ const Events = () => {
         ))}
       </div>
       
-      <div ref={loadMoreTriggerRef} className="h-10" />
+      <div ref={loadMoreTriggerRef} className="h-4" />
     </div>
   );
 };

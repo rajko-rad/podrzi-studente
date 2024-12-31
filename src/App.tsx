@@ -12,8 +12,10 @@ function App() {
     <div className="min-h-screen bg-gray-50">
       <Navbar />
       
-      {path === '/desavanja' ? (
+      {path === '/pratite' ? (
         <Events />
+      ) : path === '/zahtevi' ? (
+        <WorkInProgress />
       ) : path === '/' ? (
         <main className="max-w-4xl mx-auto px-4 py-12">
           <h1 className="text-4xl font-bold text-gray-900 mb-8 text-center">
